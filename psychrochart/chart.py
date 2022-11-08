@@ -531,6 +531,7 @@ class PsychroChart:
             **params,
         )
 
+    # 准备画布和坐标轴
     def _prepare_fig_and_axis(self, ax: Axes = None) -> Tuple[Axes, dict]:
         """Prepare matplotlib fig & Axes object for the chart."""
         fig_params = self.figure_params.copy()
