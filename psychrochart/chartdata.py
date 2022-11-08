@@ -84,6 +84,7 @@ def _get_humid_ratio_in_saturation(
     return _factor_out_w() * f_vec_hum_ratio_from_vap_press(sat_p, pressure)
 
 
+# 生成恒定的相对湿度线的点
 def gen_points_in_constant_relative_humidity(
     dry_temps: Iterable[float],
     rh_percentage: Union[float, Iterable[float]],
@@ -95,6 +96,7 @@ def gen_points_in_constant_relative_humidity(
     )
 
 
+# 制作多条恒定的相对湿度线
 def make_constant_relative_humidity_lines(
     dbt_min: float,
     dbt_max: float,
@@ -133,6 +135,7 @@ def make_constant_relative_humidity_lines(
     )
 
 
+# 制作恒定的干球垂直线
 def make_constant_dry_bulb_v_line(
     w_humidity_ratio_min: float,
     temp: float,
@@ -154,6 +157,7 @@ def make_constant_dry_bulb_v_line(
     )
 
 
+# 制作多条恒定干球垂直线
 def make_constant_dry_bulb_v_lines(
     w_humidity_ratio_min: float,
     pressure: float,
@@ -177,6 +181,7 @@ def make_constant_dry_bulb_v_lines(
     )
 
 
+# 制作恒定的湿度比水平线
 def make_constant_humidity_ratio_h_lines(
     dbt_max: float,
     pressure: float,
@@ -203,6 +208,7 @@ def make_constant_humidity_ratio_h_lines(
     )
 
 
+# 制作饱和线
 def make_saturation_line(
     dbt_min: float,
     dbt_max: float,
@@ -219,6 +225,7 @@ def make_saturation_line(
     return PsychroCurves([sat_c])
 
 
+# 制作多条恒定的焓线
 def make_constant_enthalpy_lines(
     w_humidity_ratio_min: float,
     pressure: float,
@@ -280,6 +287,7 @@ def make_constant_enthalpy_lines(
     )
 
 
+# 制作多条恒定的体积线
 def make_constant_specific_volume_lines(
     w_humidity_ratio_min: float,
     pressure: float,
@@ -337,6 +345,7 @@ def make_constant_specific_volume_lines(
     )
 
 
+# 制作恒定的湿球温度线
 def make_constant_wet_bulb_temperature_lines(
     dry_bulb_temp_max: float,
     pressure: float,
@@ -424,6 +433,7 @@ def _make_zone_dbt_rh(
     )
 
 
+# 制作区域曲线
 def make_zone_curve(
     zone_conf: Dict, increment: float, pressure: float
 ) -> PsychroCurve:

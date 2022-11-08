@@ -15,15 +15,25 @@ from scipy.spatial import ConvexHull
 from scipy.spatial.qhull import QhullError
 
 from .chartdata import (
+    # 生成恒定的相对湿度线的点
     gen_points_in_constant_relative_humidity,
+    # 制作恒定的干球垂直线
     make_constant_dry_bulb_v_line,
+    # 制作多条恒定干球垂直线
     make_constant_dry_bulb_v_lines,
+    # 制作多条恒定的焓线
     make_constant_enthalpy_lines,
+    # 制作恒定的湿度比水平线
     make_constant_humidity_ratio_h_lines,
+    # 制作多条恒定的相对湿度线
     make_constant_relative_humidity_lines,
+    # 制作多条恒定的体积线
     make_constant_specific_volume_lines,
+    # 制作恒定的湿球温度线
     make_constant_wet_bulb_temperature_lines,
+    # 制作饱和线
     make_saturation_line,
+    # 制作区域曲线
     make_zone_curve,
 )
 from .psychrocurves import PsychroCurves
@@ -110,6 +120,7 @@ class PsychroChart:
         assert isinstance(self._fig, figure.Figure)
         return self._fig
 
+    # 生成图表数据
     def _make_chart_data(
         self,
         styles: Union[dict, str] = None,
@@ -531,6 +542,7 @@ class PsychroChart:
         self._canvas = FigureCanvas(self.figure)
         if ax is None:
             ax = self.figure.gca(position=position)
+        # 设置纵轴位置
         ax.yaxis.tick_right()
         ax.yaxis.set_label_position("right")
         ax.set_xlim(self.dbt_min, self.dbt_max)
