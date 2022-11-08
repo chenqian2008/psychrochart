@@ -210,18 +210,18 @@ def make_constant_humidity_ratio_h_lines(
 
 # 制作饱和线
 def make_saturation_line(
-    dbt_min: float,
-    dbt_max: float,
+    w_min: float,
+    w_max: float,
     temp_step: float,
     pressure: float,
     style: dict,
 ) -> PsychroCurves:
     """Generate line of saturation for the psychrochart."""
-    temps_sat_line = np.arange(dbt_min, dbt_max + temp_step, temp_step)
-    w_sat = gen_points_in_constant_relative_humidity(
-        temps_sat_line, 100.0, pressure
+    w_sat_line = np.arange(w_min, w_max + temp_step, temp_step)
+    temp_sat = gen_points_in_constant_relative_humidity(
+        w_sat_line, 100.0, pressure
     )
-    sat_c = PsychroCurve(temps_sat_line, w_sat, style, type_curve="saturation")
+    sat_c = PsychroCurve(w_sat_line, temp_sat, style, type_curve="saturation")
     return PsychroCurves([sat_c])
 
 

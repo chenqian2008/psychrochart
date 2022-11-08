@@ -147,8 +147,8 @@ class PsychroChart:
 
         # Saturation line (always):
         self.saturation = make_saturation_line(
-            self.dbt_min,
-            self.dbt_max,
+            self.w_min,
+            self.w_max,
             self.temp_step,
             self.pressure,
             style=config["saturation"],
@@ -158,9 +158,9 @@ class PsychroChart:
         if self.chart_params["with_constant_dry_temp"]:
             step = self.chart_params["constant_temp_step"]
             self.constant_dry_temp_data = make_constant_dry_bulb_v_lines(
-                self.w_min,
+                self.dbt_min,
                 self.pressure,
-                temps_vl=np.arange(self.dbt_min, self.dbt_max, step),
+                temps_vl=np.arange(self.w_min, self.w_max, step),
                 style=config["constant_dry_temp"],
                 family_label=self.chart_params["constant_temp_label"],
             )
@@ -544,10 +544,14 @@ class PsychroChart:
         if ax is None:
             ax = self.figure.gca(position=position)
         # 设置纵轴位置
-        ax.yaxis.tick_right()
-        ax.yaxis.set_label_position("right")
-        ax.set_xlim(self.dbt_min, self.dbt_max)
-        ax.set_ylim(self.w_min, self.w_max)
+        ax.xaxis.tick_top()
+        ax.xaxis.set_label_position("top")
+        ax.yaxis.tick_left()
+        ax.yaxis.set_label_position("left")
+        ax.set_xlim(self.w_min, self.w_max)
+        ax.set_ylim(self.dbt_min, self.dbt_max)
+
+
         ax.grid(False)
         ax.grid(False, which="minor")
 
@@ -573,10 +577,10 @@ class PsychroChart:
                         for t in ticks
                         if t not in [self.dbt_min, self.dbt_max]
                     ]
-                ax.set_xticks(ticks)
-                ax.set_xticklabels([f"{t:g}" for t in ticks], **x_style_labels)
+                ax.set_yticks(ticks)
+                ax.set_yticklabels([f"{t:g}" for t in ticks], **y_style_labels)
         else:
-            ax.set_xticks([])
+            ax.set_yticks([])
 
         if self.chart_params.get("with_constant_humidity", True):
             step_label = self.chart_params.get(
@@ -592,10 +596,10 @@ class PsychroChart:
                     ticks = [
                         t for t in ticks if t not in [self.w_min, self.w_max]
                     ]
-                ax.set_yticks(ticks)
-                ax.set_yticklabels([f"{t:g}" for t in ticks], **y_style_labels)
+                ax.set_xticks(ticks)
+                ax.set_xticklabels([f"{t:g}" for t in ticks], **x_style_labels)
         else:
-            ax.set_yticks([])
+            ax.set_xticks([])
 
     def _apply_axis_styling(self, ax: Axes, fig_params: dict):
         """Plot the psychrochart and return the matplotlib Axes instance."""
