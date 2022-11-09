@@ -32,6 +32,7 @@ f_vec_vap_press_from_hum_ratio = np.vectorize(GetVapPresFromHumRatio)
 
 def _factor_out_w() -> float:
     """
+    将含湿量从内部单位转换位绘图单位
     Conversion factor from internal units to plot units for humidity ratio.
 
     In SI, w is internally in kg(w)/kg(da), but for plots we use g(w)/kg(da).
@@ -84,7 +85,7 @@ def _get_humid_ratio_in_saturation(
     return _factor_out_w() * f_vec_hum_ratio_from_vap_press(sat_p, pressure)
 
 
-# 生成恒定的相对湿度线的点
+# 生成在等相对湿度线上的点
 def gen_points_in_constant_relative_humidity(
     dry_temps: Iterable[float],
     rh_percentage: Union[float, Iterable[float]],
@@ -96,7 +97,7 @@ def gen_points_in_constant_relative_humidity(
     )
 
 
-# 制作多条恒定的相对湿度线
+# 制作多条等相对湿度线
 def make_constant_relative_humidity_lines(
     dbt_min: float,
     dbt_max: float,
@@ -181,7 +182,7 @@ def make_constant_dry_bulb_v_lines(
     )
 
 
-# 制作恒定的湿度比水平线
+# 制作等湿度水平线
 def make_constant_humidity_ratio_h_lines(
     dbt_max: float,
     pressure: float,
@@ -208,7 +209,7 @@ def make_constant_humidity_ratio_h_lines(
     )
 
 
-# 制作饱和线
+# 制作湿度饱和线
 def make_saturation_line(
     dbt_min: float,
     dbt_max: float,
@@ -225,7 +226,7 @@ def make_saturation_line(
     return PsychroCurves([sat_c])
 
 
-# 制作多条恒定的焓线
+# 制作多条等焓线
 def make_constant_enthalpy_lines(
     w_humidity_ratio_min: float,
     pressure: float,
@@ -238,10 +239,12 @@ def make_constant_enthalpy_lines(
 ) -> PsychroCurves:
     """Generate curves of constant enthalpy for the chart."""
     enthalpy_objective = np.array(enthalpy_values)
+    # 等焓线的最大温度
     temps_max_constant_h = f_vec_dry_temp_from_enthalpy(
         enthalpy_objective * _factor_out_h(),
         w_humidity_ratio_min / _factor_out_w(),
     )
+    # 不同温度下湿空气焓值
     h_in_sat = (
         f_vec_moist_air_enthalpy(
             saturation_curve.x_data, saturation_curve.y_data / _factor_out_w()
@@ -254,6 +257,7 @@ def make_constant_enthalpy_lines(
         fill_value="extrapolate",
         assume_sorted=True,
     )
+    # 等焓线的最小温度
     t_sat_points = solve_curves_with_iteration(
         "ENTHALPHY",
         enthalpy_objective,
@@ -263,6 +267,7 @@ def make_constant_enthalpy_lines(
         )
         / _factor_out_h(),
     )
+    # 等焓线的最小湿度
     w_in_sat = _get_humid_ratio_in_saturation(t_sat_points, pressure)
 
     return PsychroCurves(
@@ -299,9 +304,11 @@ def make_constant_specific_volume_lines(
     saturation_curve: PsychroCurve,
 ) -> PsychroCurves:
     """Generate curves of constant specific volume for the chart."""
+    # 不同体积的最大温度
     temps_max_constant_v = f_vec_dry_temp_from_spec_vol(
         np.array(vol_values), w_humidity_ratio_min / _factor_out_w(), pressure
     )
+    # 饱和空气不同温度下的体积
     v_in_sat = f_vec_moist_air_volume(
         saturation_curve.x_data,
         saturation_curve.y_data / _factor_out_w(),

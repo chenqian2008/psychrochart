@@ -144,7 +144,7 @@ class PsychroChart:
         elif config["limits"].get("altitude_m") is not None:
             self.altitude_m = config["limits"]["altitude_m"]
             self.pressure = GetStandardAtmPressure(self.altitude_m)
-
+        # 制作湿度饱和线
         # Saturation line (always):
         self.saturation = make_saturation_line(
             self.dbt_min,
@@ -154,6 +154,7 @@ class PsychroChart:
             style=config["saturation"],
         )
 
+        # 制作干球等温度线
         # Dry bulb constant lines (vertical):
         if self.chart_params["with_constant_dry_temp"]:
             step = self.chart_params["constant_temp_step"]
@@ -165,6 +166,7 @@ class PsychroChart:
                 family_label=self.chart_params["constant_temp_label"],
             )
 
+        # 制作等湿度线
         # Absolute humidity constant lines (horizontal):
         if self.chart_params["with_constant_humidity"]:
             step = self.chart_params["constant_humid_step"]
@@ -178,6 +180,7 @@ class PsychroChart:
                 family_label=self.chart_params["constant_humid_label"],
             )
 
+        # 制作多条等相对湿度曲线
         # Constant relative humidity curves:
         if self.chart_params["with_constant_rh"]:
             self.constant_rh_data = make_constant_relative_humidity_lines(
@@ -196,6 +199,7 @@ class PsychroChart:
                 family_label=self.chart_params["constant_rh_label"],
             )
 
+        # 制作等焓线
         # Constant enthalpy lines:
         if self.chart_params["with_constant_h"]:
             step = self.chart_params["constant_h_step"]
@@ -210,7 +214,7 @@ class PsychroChart:
                 family_label=self.chart_params["constant_h_label"],
                 saturation_curve=self.saturation.curves[0],
             )
-
+        # 制作等体积线
         # Constant specific volume lines:
         if self.chart_params["with_constant_v"]:
             step = self.chart_params["constant_v_step"]
@@ -225,7 +229,7 @@ class PsychroChart:
                 family_label=self.chart_params["constant_v_label"],
                 saturation_curve=self.saturation.curves[0],
             )
-
+        # 制作湿球等温度线
         # Constant wet bulb temperature lines:
         if self.chart_params["with_constant_wet_temp"]:
             step = self.chart_params["constant_wet_temp_step"]
